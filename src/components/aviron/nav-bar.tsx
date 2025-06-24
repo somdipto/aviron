@@ -18,7 +18,7 @@ export const NavBar = ({ items }: { items: NavItem[] }) => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50"
+      className="fixed top-6 w-full z-50 flex justify-center"
     >
       <div className="flex items-center gap-1 bg-background/70 backdrop-blur-lg p-2 rounded-full border border-primary/20 shadow-lg">
         {items.map((item) => {
