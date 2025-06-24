@@ -1,8 +1,9 @@
+
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface ParticlesProps {
   id?: string;
@@ -16,6 +17,15 @@ interface ParticlesProps {
   particleDensity?: number;
 }
 
+interface Particle {
+  left: string;
+  top: string;
+  width: string;
+  height: string;
+  duration: number;
+  delay: number;
+}
+
 export const SparklesCore = (props: ParticlesProps) => {
   const {
     className,
@@ -25,27 +35,43 @@ export const SparklesCore = (props: ParticlesProps) => {
     particleDensity = 100,
   } = props;
 
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  useEffect(() => {
+    const newParticles = Array.from({ length: particleDensity }).map(() => {
+      return {
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        width: `${minSize + Math.random() * (maxSize - minSize)}px`,
+        height: `${minSize + Math.random() * (maxSize - minSize)}px`,
+        duration: 2 + Math.random() * 3,
+        delay: Math.random() * 2,
+      };
+    });
+    setParticles(newParticles);
+  }, [particleDensity, minSize, maxSize]);
+
   return (
     <div className={cn("absolute inset-0 h-full w-full", className)}>
       <div className="absolute inset-0">
-        {[...Array(particleDensity)].map((_, i) => (
+        {particles.map((particle, i) => (
           <motion.div
             key={`particle-${i}`}
             className="absolute rounded-full"
             style={{
               backgroundColor: particleColor,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${minSize + Math.random() * (maxSize - minSize)}px`,
-              height: `${minSize + Math.random() * (maxSize - minSize)}px`,
+              left: particle.left,
+              top: particle.top,
+              width: particle.width,
+              height: particle.height,
             }}
             animate={{
               opacity: [0, 1, 0.5, 1, 0],
             }}
             transition={{
-              duration: 2 + Math.random() * 3,
+              duration: particle.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: particle.delay,
               ease: "linear",
             }}
           />
